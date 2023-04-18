@@ -1,0 +1,112 @@
+﻿@model Bloggie.Web.Models.ViewModels.UserViewModel
+
+@{
+}
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Users - Admin Functionality</h1>
+    </div>
+</div>
+
+<div>
+    <div class="container py-5">
+
+        <div class="mb-3 d-flex justify-content-end">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalCreateUser">
+                Create User
+            </button>
+        </div>
+
+
+        @if (Model.Users is not null || Model.Users.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Username</td>
+                            <td>@user.EmailAddress</td>
+                            <td>
+                                <form method="post" 
+                                      asp-controller="AdminUsers" 
+                                      asp-action="Delete" 
+                                      asp-route-id="@user.Id">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No users found!</p>
+        }
+
+
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+<form method="post">
+    <div class="modal fade" id="modalCreateUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create New User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" asp-for="Username" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        <input type="text" class="form-control" asp-for="Email" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" asp-for="Password" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="chkUserRole" class="form-check-input" value="User" checked disabled />
+                            <label class="form-check-label" for="chkUserRole">User Role</label>
+                        </div>
+
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <div class="form-check">
+                                <input type="checkbox" id="chkAdminRole" class="form-check-input"
+                                       asp-for="AdminRoleCheckbox" />
+                                <label class="form-check-label" for="chkAdminRole">Admin Role</label>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
